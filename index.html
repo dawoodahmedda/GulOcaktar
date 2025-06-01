@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>To: Gul Ocaktar</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom, #ffc1e3, #ffe6f0);
+
+      /* Flexbox center */
+      display: flex;
+      justify-content: center; /* center horizontally */
+      align-items: center;     /* center vertically */
+    }
+
+    .card {
+      background-color: pink;
+      padding: 40px;
+      border-radius: 56px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+      max-width: 600px;
+      text-align: center;
+      z-index: 10;
+      position: relative;
+      overflow: hidden; /* clip falling balloons */
+      height: 500px; /* increased height */
+      width: 90vw; /* responsive width */
+      max-width: 600px;
+
+    }
+
+    .profile-pic {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 20px;
+      display: block;
+      border: 4px solid white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      position: relative;
+      z-index: 20;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      color: #333;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 20;
+    }
+
+    p {
+      font-size: 18px;
+      color: #444;
+      line-height: 1.7;
+      position: relative;
+      z-index: 20;
+    }
+
+    .footer {
+      margin-top: 30px;
+      font-weight: bold;
+      color: #222;
+      position: relative;
+      z-index: 20;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Floating clouds */
+    .cloud {
+      position: absolute;
+      background: #fff;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: floatCloud linear infinite;
+    }
+
+    @keyframes floatCloud {
+      0% {
+        transform: translateX(-200px);
+      }
+      100% {
+        transform: translateX(110vw);
+      }
+    }
+
+    /* Outside floating balloons */
+    .balloon {
+      position: absolute;
+      width: 30px;
+      height: 40px;
+      background: red;
+      border-radius: 0 0 15px 15px;
+      animation: floatBalloon 10s linear infinite;
+      z-index: 2;
+    }
+
+    @keyframes floatBalloon {
+      0% {
+        bottom: -50px;
+        transform: translateX(0) rotate(0deg);
+      }
+      100% {
+        bottom: 110%;
+        transform: translateX(100px) rotate(360deg);
+      }
+    }
+
+    /* Falling balloons inside the card */
+    .card .falling-balloon {
+      position: absolute;
+      width: 20px;
+      height: 28px;
+      border-radius: 0 0 10px 10px;
+      animation: fallBalloon linear infinite;
+      z-index: 5;
+      opacity: 0.8;
+    }
+
+    @keyframes fallBalloon {
+      0% {
+        top: 30px;
+        transform: translateX(0) rotate(0deg);
+      }
+      100% {
+        top: 100%;
+        transform: translateX(30px) rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <div class="card">
+    <img src="gul.jpg" alt="Gul Ocaktar" class="profile-pic" />
+    <h1 style="color: red;">Canım Gul Ocaktar,</h1>
+
+    <p>
+      Bu mektubu inanılmaz bir Türk Şair, Öğretmen ve harika bir arkadaşa yazıyorum.
+      <strong>sizi Macaristan Budapeşte'yi ziyaret etmeye davet ediyorum Budapest, Hungary</strong>.  
+      Sizi misafirim olarak davet ediyorum ve şiirlerinizden birini okumak istiyorum.
+      ve umarım öğrenciniz bir oyun programcısı olur
+      Umarım en çok sevdiğiniz yer olan Toskana'yı en kısa zamanda ziyaret edersiniz.
+    </p>
+    <p style="color: red;" class="footer">
+      umarım vizeni en kısa zamanda alırsın<br />
+    </p>
+  </div>
+
+  <!-- Animated Clouds -->
+  <script>
+    for (let i = 0; i < 10; i++) {
+      const cloud = document.createElement('div');
+      cloud.classList.add('cloud');
+      const size = Math.random() * 100 + 50;
+      cloud.style.width = size + 'px';
+      cloud.style.height = size * 0.6 + 'px';
+      cloud.style.top = Math.random() * 60 + 'vh';
+      cloud.style.left = -200 + 'px';
+      cloud.style.animationDuration = (30 + Math.random() * 30) + 's';
+      document.body.appendChild(cloud);
+    }
+  </script>
+
+  <!-- Outside Floating Balloons -->
+  <script>
+    function createFloatingBalloon() {
+      const colors = ['#ff4d4d', '#4da6ff', '#66ff66', '#ffff66', '#ffb3ff'];
+      const balloon = document.createElement('div');
+      balloon.classList.add('balloon');
+      balloon.style.left = Math.random() * 100 + 'vw';
+      balloon.style.background = colors[Math.floor(Math.random() * colors.length)];
+      balloon.style.animationDuration = (8 + Math.random() * 4) + 's';
+      document.body.appendChild(balloon);
+
+      setTimeout(() => {
+        balloon.remove();
+      }, 12000);
+    }
+
+    setInterval(createFloatingBalloon, 1000);
+  </script>
+
+  <!-- Inside Falling Balloons -->
+  <script>
+    const card = document.querySelector('.card');
+    const colors = ['#ff4d4d', '#4da6ff', '#66ff66', '#ffff66', '#ffb3ff'];
+
+    function createFallingBalloon() {
+      const balloon = document.createElement('div');
+      balloon.classList.add('falling-balloon');
+      balloon.style.left = Math.random() * (card.clientWidth - 20) + 'px';
+      balloon.style.background = colors[Math.floor(Math.random() * colors.length)];
+      // Random duration for falling animation between 6-10 seconds
+      const duration = 6000 + Math.random() * 4000;
+      balloon.style.animationDuration = duration + 'ms';
+
+      card.appendChild(balloon);
+
+      // Remove balloon after animation duration
+      setTimeout(() => {
+        balloon.remove();
+      }, duration);
+    }
+
+    // Create a falling balloon inside the card every 800ms
+    setInterval(createFallingBalloon, 800);
+  </script>
+
+  <!-- Fireworks -->
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    let W = window.innerWidth;
+    let H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+
+    const particles = [];
+
+    function createParticles(x, y) {
+      for (let i = 0; i < 50; i++) {
+        particles.push({
+          x,
+          y,
+          size: Math.random() * 6 + 2,
+          speedX: (Math.random() - 0.5) * 8,
+          speedY: (Math.random() - 0.5) * 8,
+          color: `hsl(${Math.random() * 360}, 100%, 60%)`,
+          life: 100,
+        });
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, W, H);
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.speedX;
+        p.y += p.speedY;
+        p.life -= 1;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+        if (p.life <= 0) particles.splice(i, 1);
+      }
+      requestAnimationFrame(animateParticles);
+    }
+
+    animateParticles();
+
+    function randomFirework() {
+      const x = Math.random() * W;
+      const y = Math.random() * H * 0.6;
+      createParticles(x, y);
+    }
+
+    setInterval(randomFirework, 800);
+
+    window.addEventListener("resize", () => {
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W;
+      canvas.height = H;
+    });
+  </script>
+</body>
+</html>
